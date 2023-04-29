@@ -1,0 +1,10 @@
+C:\Pasta.C#\Projeto1\obj\Debug\Projeto1.csproj.AssemblyReference.cache
+C:\Pasta.C#\Projeto1\obj\Debug\Projeto1.csproj.SuggestedBindingRedirects.cache
+C:\Pasta.C#\Projeto1\obj\Debug\Projeto1.Properties.Resources.resources
+C:\Pasta.C#\Projeto1\obj\Debug\Projeto1.csproj.GenerateResource.cache
+C:\Pasta.C#\Projeto1\obj\Debug\Projeto1.csproj.CoreCompileInputs.cache
+C:\Pasta.C#\Projeto1\bin\Debug\Projeto1.exe.config
+C:\Pasta.C#\Projeto1\bin\Debug\Projeto1.exe
+C:\Pasta.C#\Projeto1\bin\Debug\Projeto1.pdb
+C:\Pasta.C#\Projeto1\obj\Debug\Projeto1.exe
+C:\Pasta.C#\Projeto1\obj\Debug\Projeto1.pdb
