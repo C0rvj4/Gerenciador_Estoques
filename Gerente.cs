@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Projeto1
 {
@@ -37,6 +37,8 @@ namespace Projeto1
         /// <exception cref="ArgumentNullException">Lançada se algum dos argumentos for nulo ou vazio</exception>
         public Gerente(string nome, string cpf, string contato, string senha)
         {
+            if (String.Contains("." || "-"))
+                throw new SyntaxErrorException(nameof(cpf), "O CPF deve ser declarado sem pontuação");
             if (string.IsNullOrWhiteSpace(nome))
                 throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
             if (string.IsNullOrWhiteSpace(cpf))
