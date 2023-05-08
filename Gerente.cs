@@ -1,16 +1,16 @@
 using System;
 
-namespace Projeto1
+namespace Gerencia 
 {
-    public class Gerente
+    public class Gerente : Funcionario
     {
-        // Campos
-        public string Nome { get; }
-        public string CPF { get; }
+         
+        
+       ///<sumary>
+       ///<param name="Contato"> Contato telefonico do gerente</param>
+       ///<sumary>
         public string Contato { get; }
-        public string Senha { get; }
-
-
+        
         // Gerados aleatoriamente -----------------------------------------------------------------
         /// <summary>
         /// <param name="Assinatura"> Assinatura digital individual (usada para assinar documentos)</param>
@@ -23,7 +23,27 @@ namespace Projeto1
         public int Matricula { get; set; }
         //------------------------------------------------------------------------------------------
 
+        internal Funcionario(string nome, string cpf, string senha)
+        {
+            if (cpf.Contains(".") || cpf.Contains("-"))
+             cpf = cpf.Replace(".", "").Replace("-", "");
+                
+            if (string.IsNullOrWhiteSpace(nome))
+                throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
+            if (string.IsNullOrWhiteSpace(cpf))
+                throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio");
+            if (string.IsNullOrWhiteSpace(senha))
+                throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia");  
 
+                 Funcionario.NOME = nome;
+                 Funcionario.CPF = cpf;
+                 Funcionario.SENHA = senha;
+
+
+
+        }
+
+        
 
 
         // Construtor -------------------------------------------------------------------------------
@@ -37,8 +57,13 @@ namespace Projeto1
         /// <exception cref="ArgumentNullException">Lançada se algum dos argumentos for nulo ou vazio</exception>
         public Gerente(string nome, string cpf, string contato, string senha)
         {
-            if (String.Contains("." || "-"))
-                throw new SyntaxErrorException(nameof(cpf), "O CPF deve ser declarado sem pontuação");
+            int gerador();
+            if (cpf.Contains(".") || cpf.Contains("-"))
+            {
+                string v = cpf.Replace(".", "").Replace("-", "");
+                cpf = v;
+            }
+
             if (string.IsNullOrWhiteSpace(nome))
                 throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
             if (string.IsNullOrWhiteSpace(cpf))
@@ -54,6 +79,8 @@ namespace Projeto1
             Contato = contato;
             // Proxima implementação (Será enviado um número de confirmação ao e-mail ou telefone informado para validação)
             Senha = senha;
+            Assinatura = _gerado;
+            
         }
         //---------------------------------------------------------------------------------------------
 
