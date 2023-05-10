@@ -1,52 +1,45 @@
 using System;
 
-namespace Gerencia 
-{
-    public class Gerente : Funcionario
-    {
-         
-        
-       ///<sumary>
-       ///<param name="Contato"> Contato telefonico do gerente</param>
-       ///<sumary>
-        public string Contato { get; }
-        
-        // Gerados aleatoriamente -----------------------------------------------------------------
-        /// <summary>
-        /// <param name="Assinatura"> Assinatura digital individual (usada para assinar documentos)</param>
-        /// </summary>
-        public string Assinatura { get; set; }
-        /// <summary>
-        /// <param name="Matricula">Registro do sistema interno de cada usuário do tipo gerente (utilizado para cadastro da assinatura digital)</param>
-        /// 
-        /// </summary>
-        public int Matricula { get; set; }
-        //------------------------------------------------------------------------------------------
+namespace Gerencia;
 
-        internal Funcionario(string nome, string cpf, string senha)
-        {
-            if (cpf.Contains(".") || cpf.Contains("-"))
-             cpf = cpf.Replace(".", "").Replace("-", "");
-                
-            if (string.IsNullOrWhiteSpace(nome))
-                throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
-            if (string.IsNullOrWhiteSpace(cpf))
-                throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio");
-            if (string.IsNullOrWhiteSpace(senha))
-                throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia");  
+private class Gerencia : Validador
 
-                 Funcionario.NOME = nome;
-                 Funcionario.CPF = cpf;
-                 Funcionario.SENHA = senha;
+{  
+    
+
+     /// <param name="NOME"> Nome do funcionário, deve condizer com o cpf declarado 
+    public string Nome { get;}
+    /// <param name="SENHA"> Senha de acesso ao sistema, a primeira senha será o nome do funcionário em letras minusculas e sem espaços
+    public string Senha { get;}
+    ///<param name="CPF"> CPF Do gerente, deve condizer com o nome
+    public string Cpf { get;}     
+    /// <param name="Contato">Telefone para contato</param>
+    public string Contato {get;}
+    /// <param name="Matricula"> Registro do sistema interno de cada usuário do tipo gerente (utilizado para cadastro da assinatura digital)</param>
+    public int Matricula { get;}
 
 
+// Gerador -------------------------------------------------------------------------------------------------------------------------------------------------------------
+    private static Random random = new Random();
+    private static int[] assinaturas = new int[50];
+    private static int indice = 0;
 
-        }
+    ///<sumary>  
+    ///Gera um número de see <see cref="matricula"> o qual será atribuído a um objeto do tipo <see cref="Gerente">
+    ///</sumary>
+    public int gerador()
+    {   
+        int gerado = random.Next(100, 1000);
+        assinaturas[indice] = gerado;
+        indice++;
+        Matricula = gerado;
+        return Matricula;   
+     }
 
-        
+
+// Construtores -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        // Construtor -------------------------------------------------------------------------------
         /// <summary>
         /// Cria um objeto Gerente com acesso total ao sistema.
         /// </summary>
@@ -55,45 +48,112 @@ namespace Gerencia
         /// <param name="contato">O e-mail ou telefone para contato do gerente</param>
         /// <param name="senha">A senha de acesso ao sistema do gerente</param>
         /// <exception cref="ArgumentNullException">Lançada se algum dos argumentos for nulo ou vazio</exception>
-        public Gerente(string nome, string cpf, string contato, string senha)
-        {
-            int gerador();
-            if (cpf.Contains(".") || cpf.Contains("-"))
-            {
-                string v = cpf.Replace(".", "").Replace("-", "");
-                cpf = v;
-            }
+    public Gerente(string nome, string cpf, string contato, string senha)
+    {           
+        if (!this.ValidarCpf(cpf))
+            throw new ArgumentException(nameof(cpf), "O cpf não é valido");
 
-            if (string.IsNullOrWhiteSpace(nome))
-                throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
-            if (string.IsNullOrWhiteSpace(cpf))
-                throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio");
-            if (string.IsNullOrWhiteSpace(contato))
-                throw new ArgumentNullException(nameof(contato), "O contato não pode ser nulo ou vazio");
-            if (string.IsNullOrWhiteSpace(senha))
-                throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia");
+        int matricula = gerador();
+        Nome = nome;
+        Cpf = cpf;
+        Contato = contato;
+        string Senha = nome.Replace(" ", "").ToLower();
 
-            Nome = nome;
-            CPF = cpf;
-            // Proxima implementação (Será criado um validador de CPF para confirmação a veracidade do mesmo)
-            Contato = contato;
-            // Proxima implementação (Será enviado um número de confirmação ao e-mail ou telefone informado para validação)
-            Senha = senha;
-            Assinatura = _gerado;
+
+        ///<sumary>
+        ///Erro exibido quando há letras presentes no <see cref="cpf"> declarado para a criação de um novo gerente
+        ///</sumary>
+        for (int i = 0; i < nome.Length; i++)
+            {if (char.IsDigit(nome[i]) || nome[i] == '1' || nome[i] == '2' || nome[i] == '3' || nome[i] == '4' || nome[i] == '5' || nome[i] == '6' || nome[i] == '7'
+                    || nome[i] == '8' || nome[i] == '9') { throw new SystemException(nameoff(nome), "O nome não deve conter numeros");}}
+
+        ///<sumary>
+        ///Erro exibido quando há numeros presentes no <see cref="nome"> declarado para a criação de um novo gerente
+        ///</sumary>
+        for (int i = 0; i < nome.Length; i++)
+            {if (char.IsDigit(nome[i]) || nome[i] == ',' || nome[i] == '.' || nome[i] == '-' || nome[i] == ';' || nome[i] == ':' || nome[i] == '!' || nome[i] == '?')
+                {throw new SystemException(nameoff(nome), "O nome não deve conter pontuação");}}
+
+        ///<sumary>
+        ///Erro exibido quando o <see cref="nome"> é vazio ou nulo
+        ///</sumary>
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
             
+        ///<sumary>
+        ///O erro é exibido quando o <see cref="CPF"> não é preenchido (nulo ou vazio)
+        ///</sumary>
+        if (string.IsNullOrWhiteSpace(cpf)) throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio");
+
+        ///<sumary>
+        ///Ocorre quando o <see cref="contato"> se encontra nulo ou vazio
+        ///</sumary>
+        if (string.IsNullOrWhiteSpace(contato)) throw new ArgumentNullException(nameof(contato), "O contato não pode ser nulo ou vazio");
+        
+        ///<sumary>
+        ///Erro exibido quando a <see cref="senha" é nula ou vazia
+        ///</sumary>
+        if (string.IsNullOrWhiteSpace(senha)) throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia");
+            
+
+              
         }
-        //---------------------------------------------------------------------------------------------
+    } 
+    
+        
+    
+    
+
+// Funções -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        // Métodos
-        // - Cadastro de funcionários
-        // - Entradas
-        // - Saídas
-        // - Consulta de guias
-        // - Relatórios mensais e anuais
-        // - Alterar login e senha
-        // - Cadastro de empresa parceira
-        // - Cadastro de novos produtos
-        // - Exclusão de guia
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // Métodos
+            // - Cadastro de funcionários --- Em andamento
+            // - Entradas
+            // - Saídas
+            // - Consulta de guias
+            // - Relatórios mensais e anuais
+            // - Alterar login e senha --- Em andamento
+            // - Cadastro de empresa parceira
+            // - Cadastro de novos produtos
+            // - Exclusão de guia
