@@ -7,21 +7,21 @@ private class Gerencia : Validador
 {  
     
 
-     /// <param name="NOME"> Nome do funcionário, deve condizer com o cpf declarado 
+     /// <param name="Nome"> Nome do funcionário, deve condizer com o cpf declarado 
     public string Nome { get;}
-    /// <param name="SENHA"> Senha de acesso ao sistema, a primeira senha será o nome do funcionário em letras minusculas e sem espaços
-    public string Senha { get;}
-    ///<param name="CPF"> CPF Do gerente, deve condizer com o nome
+    /// <param name="GerenteSenha"> Senha de acesso ao sistema, a primeira senha será o nome do funcionário em letras minusculas e sem espaços
+    public string GerenteSenha { get;}
+    ///<param name="Cpf"> CPF Do gerente, deve condizer com o nome
     public string Cpf { get;}     
     /// <param name="Contato">Telefone para contato</param>
     public string Contato {get;}
-    /// <param name="Matricula"> Registro do sistema interno de cada usuário do tipo gerente (utilizado para cadastro da assinatura digital)</param>
-    public int Matricula { get;}
+    /// <param name="GerenteMatricula"> Registro do sistema interno de cada usuário do tipo gerente (utilizado para cadastro da assinatura digital)</param>
+    public int GerenteMatricula { get;}
 
 
-// Gerador -------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Gerador De Matricula =================================================================================================================================
     private static Random random = new Random();
-    private static int[] assinaturas = new int[50];
+    private static int[] LitaMatriculasGerente = new int[50];
     private static int indice = 0;
 
     ///<sumary>  
@@ -29,15 +29,15 @@ private class Gerencia : Validador
     ///</sumary>
     public int gerador()
     {   
-        int gerado = random.Next(100, 1000);
-        assinaturas[indice] = gerado;
+        int gerado = random.Next(500, 1000);
+        LitaMatriculasGerente[indice] = gerado;
         indice++;
         Matricula = gerado;
         return Matricula;   
      }
 
 
-// Construtores -------------------------------------------------------------------------------------------------------------------------------------------------------
+// Construtores ================================================================================================================================
 
 
         /// <summary>
@@ -52,53 +52,153 @@ private class Gerencia : Validador
     {           
         if (!this.ValidarCpf(cpf))
             throw new ArgumentException(nameof(cpf), "O cpf não é valido");
+        else(Cpf = cpf);
+
+        if(!this.ValidarTelefone(contato))
+            throw new ArgumentException(nameoff(contato),"O numero de celular não é valido, verifique e tente novamente.");
+        else (Contato = contato);
 
         int matricula = gerador();
         Nome = nome;
-        Cpf = cpf;
-        Contato = contato;
         string Senha = nome.Replace(" ", "").ToLower();
 
 
-        ///<sumary>
-        ///Erro exibido quando há letras presentes no <see cref="cpf"> declarado para a criação de um novo gerente
-        ///</sumary>
-        for (int i = 0; i < nome.Length; i++)
-            {if (char.IsDigit(nome[i]) || nome[i] == '1' || nome[i] == '2' || nome[i] == '3' || nome[i] == '4' || nome[i] == '5' || nome[i] == '6' || nome[i] == '7'
-                    || nome[i] == '8' || nome[i] == '9') { throw new SystemException(nameoff(nome), "O nome não deve conter numeros");}}
+// Erros Nome =================================================================================================================================
+    
 
-        ///<sumary>
-        ///Erro exibido quando há numeros presentes no <see cref="nome"> declarado para a criação de um novo gerente
-        ///</sumary>
-        for (int i = 0; i < nome.Length; i++)
-            {if (char.IsDigit(nome[i]) || nome[i] == ',' || nome[i] == '.' || nome[i] == '-' || nome[i] == ';' || nome[i] == ':' || nome[i] == '!' || nome[i] == '?')
-                {throw new SystemException(nameoff(nome), "O nome não deve conter pontuação");}}
+        if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio.");
 
-        ///<sumary>
-        ///Erro exibido quando o <see cref="nome"> é vazio ou nulo
-        ///</sumary>
-        if (string.IsNullOrWhiteSpace(nome))
-            throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
+        if (TemNumeros(nome)) throw new ArgumentException(nameoff(nome), "O nome não pode conter número.");
             
+
+// Erros CPF ===================================================================================================================================
+      
+      
+        if (string.IsNullOrWhiteSpace(cpf)) throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio.");
+
+        if (TemLetras(cpf)) throw new ArgumentException(nameoff(cpf), "O cpf não pode conter letras.");
+
+
+// Erros Contato ================================================================================================================================  
+     
+     
+        if (string.IsNullOrWhiteSpace(contato)) throw new ArgumentNullException(nameof(contato), "O contato não pode ser nulo ou vazio.");
+
+
+ // Erros Senha =================================================================================================================================   
+      
+      
+        if (string.IsNullOrWhiteSpace(senha)) throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia.");
+            
+
+
+
+// Metodos  =======================================================================================================================================
+        }
+
+         private bool TemNumeros(string text)
+        {
+            foreach (char c in text)
+            {
+                if (char.IsDigit(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool TemPontuacao(string text)
+        {
+            foreach (char c in text)
+            {
+                if (char.IsPunctuation(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }    
+
+
+        private bool TemLetras(string text)
+        {
+
+                foreach(char c in text)
+                {
+                        if (Char.IsAsciiLetter)
+                        return true;
+                }
+               return false;
+
+
+       
+    }
+}
         ///<sumary>
-        ///O erro é exibido quando o <see cref="CPF"> não é preenchido (nulo ou vazio)
+        /// Verifica se a GerenteSenha fornecida confere com a GerenteMatricula do objeto <see cref="Gerencia"> fornecido.
+        ///<param name="GerenteMatricula"> A matricula do gerente o qual está utilizando o sistema.
+        ///<param name="GerenteSenha"> Senha do Objeto gerente que está utilizando o sistena
+        ///<returns> Reetorna um Bool sendo False = não confere, true = Confere</returns> 
         ///</sumary>
-        if (string.IsNullOrWhiteSpace(cpf)) throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio");
+        private bool VerificarSenha(int GerenteMatricula, string GerenteSenha)
+        {
+        Gerente gerente = ObterGerentePorMatricula(matricula);
+            if (gerente != null && gerente.Senha == senha) 
+            {return true;} 
+            else {return false;}
+        }   
 
         ///<sumary>
-        ///Ocorre quando o <see cref="contato"> se encontra nulo ou vazio
+        /// Atribui a nova senha ao funcionário.
+        ///<param name="MatriculaFuncionario"> A matricula do objeto <see cref="Funcionario"> a qual esta sendo alterada.
+        ///<param name="NovaSenhaFuncionario"> A Nova senha a qual será atribuída.
         ///</sumary>
-        if (string.IsNullOrWhiteSpace(contato)) throw new ArgumentNullException(nameof(contato), "O contato não pode ser nulo ou vazio");
+        private string AtribuiSenha(int MatriculaFuncionario, string NovaSenhaFuncionario) 
+        {
+        Funcionario FuncionarioEncontrado = ListaFuncionario.FirstOrDefault(g => g.MatriculaFuncionario == MatriculaFuncionario);
+        if  (Funcionario != null) {
+        Funcionario.Senha = novaSenha;
+        Console.WriteLine("Senha alterada com sucesso!");} 
+        else {Console.WriteLine("Gerente não encontrado!");}
+        }
+
         
         ///<sumary>
-        ///Erro exibido quando a <see cref="senha" é nula ou vazia
-        ///</sumary>
-        if (string.IsNullOrWhiteSpace(senha)) throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia");
+        /// Troca a senha de um objeto do tipo <see cref="Funcionario">
+        private void TrocaSenha(int GerenteMatricula, string SenhaGerente, int MatriculaFuncionario, string SenhaAntigaFuncionario, string NovaSenhaFuncionario)
+        {
+            
+            // procurando a matricula inserida  
+            bool encontrou = false;
+            for (int i = 0; i < LitaMatriculasGerente.Length; i++) 
+            {
+            if (numeros[i] == GerenteMatricula) {encontrou = true;}
+            }
+
+             // liberando o acesso
+            if(encontrou == true)
+                {return("Acesso liberado");}
+            else
+                {return("Apenas Gerentes podem alterar senhas");break;}
+
+            // Verificando se a senha confere com a matricula    
+            bool VerificarSenha(int GerenteMatricula, string SenhaGerente);
+
+            // Liberando acesso
+            if(VerificarSenha == true )
+            {return ($"A senha confere, Gerente {GerenteMatricula}");}
+            else throw new ArgumentException(nameoff(SenhaGerente), "A senha provida não confere com a matricula, confira e tente novamente");
+
+            // Atribui a nova senha ao funcionário 
+            if(VerificarSenha == true && encontrou == true)
+            {
+                 void AtribuiSenha(int MatriculaFuncionario, string NovaSenhaFuncionario);
+            }
+
             
 
-              
-        }
-    } 
+        } 
     
         
     
