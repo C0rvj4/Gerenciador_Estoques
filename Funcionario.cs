@@ -1,75 +1,116 @@
 using System;
 
-namespace Gerencia;
- public class Funcionario : Validador
-        {       
-
-        ///<sumary>
-        ///O cpf deve ser válido e condizer com o nome inserido.
-        ///</sumary>
-        string Cpf { get;}
-        ///<sumary>
-        ///Nome do funcionário, deve condizer com o cpf
-        ///</sumary>
-        string Nome { get;}
-        ///<sumary>
-        ///Senha de acesso ao sistema. A primeira senha será o nome da pessoa, sem espaços e em letras minusculas
-        ///<sumary>
-        string Senha { get;}
+namespace Gerencia
+{
+    public class Funcionario : Validador
+    {
+        public string Cpf {get;}
+        public string Nome {get;}
+        public string Senha {get;}
+        /// <param name="MatriculaGerente"> Registro do sistema interno de cada usuário do tipo funcionário (utilizado para identificação)
+        public int MatriculaFuncionario {get;}
     
- public Funcionario (string nome, string Cpf)
+    list<Funcionario> ListaFuncionario = new list<Funcionario>();
+    
+
+
+    private static Random random = new Random();
+    private static int[] ListaMatriculasFuncionario = new int[50];
+    private static int indice = 0;
+
+    ///<sumary>  
+    ///Gera um número de see <see cref="matricula"> o qual será atribuído a um objeto do tipo <see cref="Gerente">
+    ///</sumary>
+    public int gerador()
+    {   
+        int gerado = random.Next(100, 400);
+        ListaMatriculasFuncionario[indice] = gerado;
+        indice++;
+        MatriculaFuncionario = gerado;
+        return MatriculaFuncionario;   
+     }
+
+        public Funcionario(string nome, string cpf, List<Funcionario> funcionario)
         {
-                if(!this.ValidadorCPF(cpf)) {return("O CPF inserido não é valido");} else {cpf=Cpf;}
-                Nome = nome;
-                Senha = Nome.Replace(" ", "").ToLower();
 
-        ///<sumary>
-        ///Exceção exibida quando o CPF foi digitado incorretamente ou não existe.
-        ///</sumary>
-        if(!this.ValidarCpf(cpf)) throw new ArgumentException(nameof(cpf),"O CPF digita é invalido, verifique e tente novamente");   
+        if (!ValidarCpf(cpf))
+            {
+                throw new ArgumentException("O CPF digitado é inválido. Verifique e tente novamente.", nameof(cpf));
+            }
+            Cpf = cpf;
+            Nome = nome;
+            Senha = Nome.Replace(" ", "").ToLower();
+            funcionario.add(this);
+            
 
-               ///<sumary>
-        ///Erro exibido quando há letras presentes no <see cref="cpf"> declarado para a criação de um novo gerente
-        ///</sumary>
-        for (int i = 0; i < nome.Length; i++)
-            { if (char.IsDigit(nome[i]) || nome[i] == '1' || nome[i] == '2' || nome[i] == '3' || nome[i] == '4' || nome[i] == '5' || nome[i] == '6' || nome[i] == '7'
-                    || nome[i] == '8' || nome[i] == '9')
-                { throw new SystemException(nameoff(nome), "O nome não deve conter numeros");} }
 
-        ///<sumary>
-        ///Erro exibido quando há numeros presentes no <see cref="nome"> declarado para a criação de um novo gerente
-        ///</sumary>
-        for (int i = 0; i < nome.Length; i++)
-            {if (char.IsDigit(nome[i]) || nome[i] == ',' || nome[i] == '.' || nome[i] == '-' || nome[i] == ';' || nome[i] == ':' || nome[i] == '!' || nome[i] == '?')
-                {throw new SystemException(nameoff(nome), "O nome não deve conter pontuação");} }
+       
 
-        ///<sumary
-        ///Erro exibido quando o <see cref="nome"> é vazio ou nulo
-        ///</sumary>
-        if (string.IsNullOrWhiteSpace(nome))throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio");
-        ///<sumary>
-        ///O erro é exibido quando o <see cref="CPF"> não é preenchido (nulo ou vazio)
-        ///</sumary>
-        if (string.IsNullOrWhiteSpace(cpf))throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio");
-        ///<sumary>
-        ///Erro exibido quando a <see cref="senha" é nula ou vazia
-        ///</sumary>
-        if (string.IsNullOrWhiteSpace(senha))throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia");
 
+
+// Erros nome  ========================================================================================
+       
+        if (TemNumeros(nome))  {throw new SystemException("O nome não deve conter números.");}
+
+        if (TemPontuacao(nome)) {throw new SystemException("O nome não deve conter pontuação.");}
+
+        if (string.IsNullOrWhiteSpace(nome)) {throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio.");}
+
+// Erros CPF  ===========================================================================================
+
+        if (string.IsNullOrWhiteSpace(cpf))  {throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio.");}     
+
+        if(Temletras(cpf)) {throw new ArgumentException(nameof (cpf),"O  nao deve conter letras");}
+
+
+// Erros Senha    ========================================================================================    
+            
+
+        if (string.IsNullOrWhiteSpace(senha))  {throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia.");}
+        
         }
 
-    
+
+// Metodos  ==============================================================================================
+
+        private bool TemNumeros(string text)
+        {
+            foreach (char c in text)
+            {
+                if (char.IsDigit(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool TemPontuacao(string text)
+        {
+            foreach (char c in text)
+            {
+                if (char.IsPunctuation(c))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }    
 
 
+        private bool TemLetras(string text)
+        {
 
-
-        //funções//
-
-        //Entradas,
-        //Saídas,
-        //consulta de guias,
-        //relatórios mensais, anuais
-        //consulta de produtos e estoque
-        //consulta de cógdigos 
-    
+                foreach(char c in text)
+                {
+                        if (Char.IsAsciiLetter)
+                        return true;
+                }
+               return false;
+        }
+                
+                
+                
+                
+        }
 }
