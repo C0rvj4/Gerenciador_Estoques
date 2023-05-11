@@ -2,7 +2,8 @@ using System;
 
 namespace Gerencia
 {
-    public class Validador{
+    public class Validador
+    {
 
     public bool ValidarCpf(string cpf)
 {
