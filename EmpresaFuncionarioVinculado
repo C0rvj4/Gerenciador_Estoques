@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Gerencia1;
+
+    internal class EmpresaFuncionarioVinculado
+    {
+       
+
+        private class Socios
+        {
+        private string SocioCpf { get; }
+        private string SocioNome { get; }
+        private string SocioContato { get; }
+        private int SocioIdentificacao { get; }
+
+        private Socios(string _SocioCpf, string _SocioNome, string _SocioContato)
+        {
+            if (Validador.ValidarCpf(_SocioCpf))
+            {
+                SocioCpf = _SocioCpf;
+            }
+
+            Gerente.FormatarNome(_SocioNome);
+            SocioNome = _SocioNome;
+            Validador.ValidarTelefone(_SocioContato);
+            SocioContato = _SocioContato;
+
+        }
+
+
+    }
+
+    private class EmpresasParceiras
+    {
+
+    }
+}
