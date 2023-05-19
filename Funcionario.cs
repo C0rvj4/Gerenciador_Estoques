@@ -1,77 +1,40 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Gerencia
+
+namespace Gerencia1
 {
-    public class Funcionario : Validador
+    public class Funcionario
     {
-        public string Cpf {get;}
-        public string Nome {get;}
-        public string Senha {get;}
+        public string FuncionarioCpf { get; }
+        public string FuncionarioNome { get; }
+        public string FuncionarioSenha { get; }
         /// <param name="MatriculaGerente"> Registro do sistema interno de cada usuário do tipo funcionário (utilizado para identificação)
-        public int MatriculaFuncionario {get;}
-    
-    list<Funcionario> ListaFuncionario = new list<Funcionario>();
-    
+        public int MatriculaFuncionario { get; }
 
 
-    private static Random random = new Random();
-    private static int[] ListaMatriculasFuncionario = new int[50];
-    private static int indice = 0;
+        // Contrutor ===================================================================================================================================================================
 
-    ///<sumary>  
-    ///Gera um número de see <see cref="matricula"> o qual será atribuído a um objeto do tipo <see cref="Gerente">
-    ///</sumary>
-    public int gerador()
-    {   
-        int gerado = random.Next(100, 400);
-        ListaMatriculasFuncionario[indice] = gerado;
-        indice++;
-        MatriculaFuncionario = gerado;
-        return MatriculaFuncionario;   
-     }
-
-        public Funcionario(string nome, string cpf, List<Funcionario> funcionario)
+        public Funcionario(string _Funcionarionome, string _FuncionarioCpf, List<Funcionario> funcionario)
         {
-
-        if (!ValidarCpf(cpf))
+            // Valida o CPF e atribui ao Objeto
+            if (Validador.ValidarCpf(_FuncionarioCpf))
             {
-                throw new ArgumentException("O CPF digitado é inválido. Verifique e tente novamente.", nameof(cpf));
+                FuncionarioCpf = _FuncionarioCpf;
             }
-            Cpf = cpf;
-            Nome = nome;
-            Senha = Nome.Replace(" ", "").ToLower();
-            funcionario.add(this);
+            
+            FuncionarioNome =  Gerente.FormatarNome(_Funcionarionome);
+            FuncionarioSenha = Gerente.FormatarNome(this.FuncionarioNome);
             
 
-
-       
-
-
-
-// Erros nome  ========================================================================================
-       
-        if (TemNumeros(nome))  {throw new SystemException("O nome não deve conter números.");}
-
-        if (TemPontuacao(nome)) {throw new SystemException("O nome não deve conter pontuação.");}
-
-        if (string.IsNullOrWhiteSpace(nome)) {throw new ArgumentNullException(nameof(nome), "O nome não pode ser nulo ou vazio.");}
-
-// Erros CPF  ===========================================================================================
-
-        if (string.IsNullOrWhiteSpace(cpf))  {throw new ArgumentNullException(nameof(cpf), "O CPF não pode ser nulo ou vazio.");}     
-
-        if(Temletras(cpf)) {throw new ArgumentException(nameof (cpf),"O  nao deve conter letras");}
-
-
-// Erros Senha    ========================================================================================    
-            
-
-        if (string.IsNullOrWhiteSpace(senha))  {throw new ArgumentNullException(nameof(senha), "A senha não pode ser nula ou vazia.");}
-        
         }
 
 
-// Metodos  ==============================================================================================
+
+        // Metodos  ====================================================================================================================================================================
 
         private bool TemNumeros(string text)
         {
@@ -95,22 +58,22 @@ namespace Gerencia
                 }
             }
             return false;
-        }    
+        }
 
 
         private bool TemLetras(string text)
         {
 
-                foreach(char c in text)
-                {
-                        if (Char.IsAsciiLetter)
-                        return true;
-                }
-               return false;
+            foreach (char c in text)
+            {
+                if (Char.IsLetter(c))
+                    return true;
+            }
+            return false;
         }
-                
-                
-                
-                
-        }
+
+
+
+
+    }
 }
