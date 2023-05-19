@@ -1,1 +1,1 @@
-# Gerenciador_Estoques
+# Gerenciador_Estoques_PROJETO_EM_PAUSA
